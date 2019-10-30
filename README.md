@@ -1,4 +1,4 @@
-# bioSIM_server
+# BioSIM_server
 This project is a workaround Server App wrapper pulling data from bioSIM project for feeding Capsis's simulators.
 
 # Authors
