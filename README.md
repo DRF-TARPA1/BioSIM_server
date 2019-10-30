@@ -1,5 +1,5 @@
 # BioSIM_server
-This project is a workaround Server App wrapper pulling data from bioSIM project for feeding Capsis's simulators.
+This project is a workaround Server App wrapper pulling data from NRCAN BioSIM project for feeding Capsis's simulators.
 
 # Authors
 * Mathieu Fortin
