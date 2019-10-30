@@ -9,4 +9,6 @@ This project is a workaround Server App wrapper pulling data from bioSIM project
 * ftp://ftp.cfl.forestry.ca/regniere/software/BioSIM/BioSIM10/
 * http://publications.gc.ca/site/eng/463529/publication.html
 * https://github.com/RNCan
+* http://capsis.cirad.fr/capsis/home
+
 
