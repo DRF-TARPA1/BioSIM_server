@@ -1,0 +1,1 @@
+"C:\Program Files (x86)\java\jre7\bin\java" -cp ./bin;./ext/* app.BioSimServer 

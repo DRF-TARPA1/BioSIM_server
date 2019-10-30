@@ -1,0 +1,69 @@
+package app;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import quebecmrnf.weather.BioSimWeather;
+import repicea.net.server.AbstractServer;
+import repicea.net.server.ClientThread;
+import repicea.net.server.ServerConfiguration;
+
+public class BioSimServer extends AbstractServer {
+
+	private class BioSimClientThread extends ClientThread {
+
+		protected BioSimClientThread(AbstractServer caller, int workerID) {
+			super(caller, workerID);
+		}
+
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		@Override
+		protected void processRequest() throws Exception {
+			List<Double[]> output = new ArrayList<Double[]>();
+			List<Double[]> request = (List) getSocket().readObject();
+			for (Double[] locations : request) {
+				if (locations.length == 3) {
+					double latitude = locations[0];
+					double longitude = locations[1];
+					float altitude = locations[2].floatValue();
+					Double[] result = BioSimWeather.getInstance().getClimateVariablesForArtemis2009(latitude, longitude, altitude).toArray(new Double[]{});
+					output.add(result);
+				} 
+			}
+			getSocket().writeObject(output);
+		}
+	}
+	
+	
+	public BioSimServer(ServerConfiguration configuration) throws Exception {
+		super(configuration);
+	}
+
+	@Override
+	protected ClientThread createClientThread(AbstractServer server, int id) {
+		return new BioSimClientThread(server, id);
+	}
+
+	
+	public static void main(String[] args) {
+		ServerConfiguration conf = null; 
+		if (args != null && args.length >= 2) {
+			try {
+				int outerPort = Integer.parseInt(args[0].toString());
+				int innerPort = Integer.parseInt(args[1].toString());
+				conf = new ServerConfiguration(10, outerPort, innerPort);
+			} catch (Exception e) {}
+		}
+		if (conf == null) {
+			conf = new ServerConfiguration(10, 18000, 18804);
+		}
+		try {
+			new BioSimServer(conf).startApplication();
+			System.out.println("Server initialized!");
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("Unable to initialize server!");
+		}
+	}
+	
+}

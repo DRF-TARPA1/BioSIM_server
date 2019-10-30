@@ -1,0 +1,65 @@
+package app;
+
+import java.util.List;
+
+import quebecmrnf.weather.BioSimWeather;
+import repicea.net.server.AbstractServer;
+import repicea.net.server.ClientThread;
+import repicea.net.server.ServerConfiguration;
+
+public class BioSimServer extends AbstractServer {
+
+	private class BioSimClientThread extends ClientThread {
+
+		protected BioSimClientThread(AbstractServer caller, int workerID) {
+			super(caller, workerID);
+		}
+
+		@Override
+		protected void processRequest() throws Exception {
+			String request = (String) getSocket().readObject();
+			String[] requestStrings = request.split(";");
+			if (requestStrings.length == 3) {
+				double latitude = Double.parseDouble(requestStrings[0]);
+				double longitude = Double.parseDouble(requestStrings[1]);
+				float altitude = Float.parseFloat(requestStrings[2]);
+				List<Double> result = BioSimWeather.getInstance().getClimateVariablesForArtemis2009(latitude, longitude, altitude);
+				getSocket().writeObject(result);
+			}
+		}
+		
+	}
+	
+	
+	public BioSimServer(ServerConfiguration configuration) throws Exception {
+		super(configuration);
+	}
+
+	@Override
+	protected ClientThread createClientThread(AbstractServer server, int id) {
+		return new BioSimClientThread(server, id);
+	}
+
+	
+	public static void main(String[] args) {
+		ServerConfiguration conf = null; 
+		if (args != null && args.length >= 2) {
+			try {
+				int outerPort = Integer.parseInt(args[0].toString());
+				int innerPort = Integer.parseInt(args[1].toString());
+				conf = new ServerConfiguration(10, outerPort, innerPort);
+			} catch (Exception e) {}
+		}
+		if (conf == null) {
+			conf = new ServerConfiguration(10, 18000, 18804);
+		}
+		try {
+			new BioSimServer(conf).startApplication();
+			System.out.println("Server initialized!");
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("Unable to initialize server!");
+		}
+	}
+	
+}
