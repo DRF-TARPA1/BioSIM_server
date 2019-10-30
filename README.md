@@ -1,8 +1,9 @@
 # BioSIM_server
-This project is a workaround Server App wrapper pulling data from NRCAN BioSIM project for feeding Capsis's simulators.
+This project is a workaround Server App wrapper pulling data from NRCAN BioSIM project for feeding Capsis's simulators. An Azure setup is available on the branch.
 
 # Authors
-* Mathieu Fortin
+* Mathieu Fortin (Original)
+* Patrice Tardif (Azure version on the branch)
 
 # References
 * https://cfs.nrcan.gc.ca/projects/133
